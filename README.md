@@ -1,4 +1,4 @@
-# sk Analytics
+# SK Analytics
 
 ## Example train/predict session
 Once you have your environment set up (see below), you can start the server with:
