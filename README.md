@@ -1,6 +1,6 @@
 # SK Analytics
 
-## Example train/predict session
+## Example train/predict session with regression/elasticnet
 Once you have your environment set up (see below), you can start the server with:
 
 ```
