@@ -1,4 +1,5 @@
 # SK Analytics
+A platform for exposing the full power of scikit-learn over an API for easy use with any codebase. The train endpoints automatically perform imputation/cross-validation/feature vectorization, making it easy to focus on model and feature selection.
 
 ## Example train/predict session with regression/elasticnet
 Once you have your environment set up (see below), you can start the server with:
