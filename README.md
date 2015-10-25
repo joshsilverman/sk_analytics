@@ -1,5 +1,56 @@
-# sk Analytics
+# SK Analytics
+A platform for exposing the full power of scikit-learn over an API for easy use with any codebase. The train endpoints automatically perform imputation/cross-validation/feature vectorization, making it easy to focus on model and feature selection.
 
+## Example train/predict session with regression/elasticnet
+Once you have your environment set up (see below), you can start the server with:
+
+```
+#!sh
+$ python manage.py runserver
+
+```
+Then, train/predict from whatever library you want via REST with (ruby example):
+
+```
+TRAIN_URL = SK_ANALYTICS_BASE_URL + '/estimators/train'
+RestClient::Request.execute(
+        :method => :post,
+        :url => TRAIN_URL,
+        :timeout => 1000,
+        :open_timeout => 1000,
+        :payload => {
+          ids_features_targets: file,
+          trainer: 'elasticnet'}
+      )
+
+# where the file takes the form:
+
+[<item id>, <features>, <continuous value for item>],
+[<item id>, <features>, <continuous value for item>],
+...
+
+# and where the <features> for a given item takes the form:
+{'continuous': [1,3,5,1.5...],
+ 'categorical': {
+    'hair_color': 'brown',
+    'tshirt_size': 'L'
+ }}
+
+```
+
+Lastly, run predictions with:
+
+```
+PREDICT_URL = SK_ANALYTICS_BASE_URL + '/estimators/predict'
+RestClient.post(PREDICT_URL,
+  estimator_id: estimator_id,
+  ids_feature_vectors: [
+    [<item id>, <features>, <continuous value for item>],
+    [<item id>, <features>, <continuous value for item>]
+    ...
+  ])
+
+```
 
 ## Install python 2.7
 
@@ -52,16 +103,3 @@ Should show no errors / failures.
 
 ## Run "python ./manage.py test"
 All tests should pass.
-
-## Example training session:
-
-```
-#!sh
-
-$ python manage.py runserver
-
-# In a second shell window:
-$ export sk_ANALYTICS_BASE_URL='http://127.0.0.1:8000'
-$ rake train_predict:train[48,win_loss,sgdclassifier]
-
-```
