@@ -17,16 +17,20 @@ logger = logging.getLogger(__name__)
 def train(request):
     try:
         features_to_targets_raw = request.FILES['ids_features_targets'].readlines()
+        # embed()
         sk_account_id = int(request.POST['sk_account_id'])
+        # embed()
         features_to_targets = json.loads("".join(features_to_targets_raw))
+        # embed()
         trainer_str = request.POST.get('trainer', '')
-
+        # embed()
         e, created = Estimator.objects.get_or_create(
             trainer=trainer_str,
             features=features_to_targets,
             sk_account_id=sk_account_id,
         )
         e.save()
+        # embed()
 
         trainer = trainer_selector.select_trainer(trainer_str)
         cross_validator = CrossValidator(trainer)

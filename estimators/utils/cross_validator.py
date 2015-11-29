@@ -14,10 +14,11 @@ class CrossValidator:
     def cross_validate(self, features_to_targets):
         shuffle(features_to_targets)
         v = Vectorizer(features_to_targets, features_to_targets)
-        kf = cross_validation.KFold(len(v.features), n_folds=10)
+        kf = cross_validation.KFold(len(v.features), n_folds=2)
 
         self.mses = []
         self.rs = []
+        self.correct_percentage = []
         for train_index, validate_index in kf:
             raw_features_to_train = [features_to_targets[i] for i in train_index]
             raw_features_to_validate = [features_to_targets[i] for i in validate_index]
@@ -33,10 +34,12 @@ class CrossValidator:
             self.model.train(features_to_train, targets_to_train)
             self.model.validate(features_to_validate, targets_to_validate)
 
-            self.mses.append(self.model.mse())
-            self.rs.append(self.model.r())
+            # self.mses.append(self.model.mse())
+            # self.rs.append(self.model.r())
 
-            self.update_selected_model()
+            # self.update_selected_model()
+            self.correct_percentage.append(1 - sum(self.model.errors) / float(len(self.model.errors)))
+        embed()
 
     def update_selected_model(self):
         if len(self.mses) == 1:
