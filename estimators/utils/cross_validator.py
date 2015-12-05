@@ -14,32 +14,32 @@ class CrossValidator:
     def cross_validate(self, features_to_targets):
         shuffle(features_to_targets)
         v = Vectorizer(features_to_targets, features_to_targets)
-        kf = cross_validation.KFold(len(v.features), n_folds=2)
+        # kf = cross_validation.KFold(len(v.features), n_folds=1)
 
         self.mses = []
         self.rs = []
         self.correct_percentage = []
-        for train_index, validate_index in kf:
-            raw_features_to_train = [features_to_targets[i] for i in train_index]
-            raw_features_to_validate = [features_to_targets[i] for i in validate_index]
 
-            v_train = Vectorizer(raw_features_to_train, raw_features_to_train)
-            v_validate = Vectorizer(raw_features_to_train, raw_features_to_validate)
+        half = len(features_to_targets)/2
+        raw_features_to_train = features_to_targets[:half]
+        raw_features_to_validate = features_to_targets[half:]
 
-            features_to_train = v_train.features
-            targets_to_train = v_train.targets
-            features_to_validate = v_validate.features
-            targets_to_validate = v_validate.targets
+        v_train = Vectorizer(raw_features_to_train, raw_features_to_train)
+        v_validate = Vectorizer(raw_features_to_train, raw_features_to_validate)
 
-            self.model.train(features_to_train, targets_to_train)
-            self.model.validate(features_to_validate, targets_to_validate)
+        features_to_train = v_train.features
+        targets_to_train = v_train.targets
+        features_to_validate = v_validate.features
+        targets_to_validate = v_validate.targets
 
-            # self.mses.append(self.model.mse())
-            # self.rs.append(self.model.r())
+        self.model.train(features_to_train, targets_to_train)
+        self.model.validate(features_to_validate, targets_to_validate)
 
-            # self.update_selected_model()
-            self.correct_percentage.append(1 - sum(self.model.errors) / float(len(self.model.errors)))
-        embed()
+        self.mses.append(self.model.mse())
+        self.rs.append(self.model.r())
+
+        # self.update_selected_model()
+        self.correct_percentage.append(1 - sum(self.model.errors) / float(len(self.model.errors)))
 
     def update_selected_model(self):
         if len(self.mses) == 1:

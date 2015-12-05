@@ -10,5 +10,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^estimators/train', views.train),
+    url(r'^estimators/rebuild_model', views.rebuild_model),
     url(r'^estimators/predict', views.predict),
 )

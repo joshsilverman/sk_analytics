@@ -15,14 +15,14 @@ class Elasticnet:
         self.targets = targets
         self.predictions = []
         for i, _features in enumerate(features):
-            target = targets[i] or 1.0/60
+            target = targets[i] or 1.0
             prediction = self.elasticnet_model.predict(_features)
             self.predictions.append(prediction)
 
             # normalize
             if prediction < 0:
                 prediction = 0
-
+            
             self.errors.append(prediction - target)
 
     def predict(self, features):
