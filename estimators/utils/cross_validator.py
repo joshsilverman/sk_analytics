@@ -19,27 +19,39 @@ class CrossValidator:
         self.mses = []
         self.rs = []
         self.correct_percentage = []
+        # for train_index, validate_index in kf:
+        # raw_features_to_train = [features_to_targets[i] for i in train_index]
+        # raw_features_to_validate = [features_to_targets[i] for i in validate_index]
 
-        half = len(features_to_targets)/2
-        raw_features_to_train = features_to_targets[:half]
-        raw_features_to_validate = features_to_targets[half:]
+        # indices = range(0,len(features_to_targets))
+        # a_list[:half], a_list[half:]
 
-        v_train = Vectorizer(raw_features_to_train, raw_features_to_train)
-        v_validate = Vectorizer(raw_features_to_train, raw_features_to_validate)
+        # for i in range(0, len(features_to_targets)):
 
-        features_to_train = v_train.features
-        targets_to_train = v_train.targets
-        features_to_validate = v_validate.features
-        targets_to_validate = v_validate.targets
+        for i in range(7,len(features_to_targets)):
+            half = i/2
+            raw_features_to_train = features_to_targets[:i][:half]
+            raw_features_to_validate = features_to_targets[:i][half:]
 
-        self.model.train(features_to_train, targets_to_train)
-        self.model.validate(features_to_validate, targets_to_validate)
+            v_train = Vectorizer(raw_features_to_train, raw_features_to_train)
+            v_validate = Vectorizer(raw_features_to_train, raw_features_to_validate)
 
-        self.mses.append(self.model.mse())
-        self.rs.append(self.model.r())
+            features_to_train = v_train.features
+            targets_to_train = v_train.targets
+            features_to_validate = v_validate.features
+            targets_to_validate = v_validate.targets
+
+            self.model.train(features_to_train, targets_to_train)
+            self.model.validate(features_to_validate, targets_to_validate)
+
+            self.mses.append(self.model.mse())
+            self.rs.append(self.model.r())
 
         # self.update_selected_model()
-        self.correct_percentage.append(1 - sum(self.model.errors) / float(len(self.model.errors)))
+        print "\t".join(map(str, self.mses))
+        print ""
+        print "\t".join(map(str, self.rs))
+        # self.correct_percentage.append(1 - sum(self.model.errors) / float(len(self.model.errors)))
 
     def update_selected_model(self):
         if len(self.mses) == 1:
